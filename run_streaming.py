@@ -46,7 +46,8 @@ if __name__ == '__main__':
     video_depth_anything.load_state_dict(torch.load(f'./checkpoints/video_depth_anything_{args.encoder}.pth', map_location='cpu'), strict=True)
     video_depth_anything = video_depth_anything.to(DEVICE).eval()
 
-    cap = cv2.VideoCapture(args.input_video)
+    # cap = cv2.VideoCapture(args.input_video)
+    cap = cv2.VideoCapture(0)
     original_fps = cap.get(cv2.CAP_PROP_FPS)
     original_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     original_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
