@@ -1,4 +1,4 @@
-# Video_Depth
+# VDA-Absolute-Depth-Distillation
 
 基于 Video Depth Anything (VDA) 的绝对深度蒸馏工程。  
 该仓库将原始“视频相对深度”能力改造为“单图输入 + 物理尺度输出”的流程，用于稳定地生成绝对深度结果并支持时序对比分析。
@@ -11,10 +11,31 @@
 - 当前映射采用倒数后线性仿射：
   `D_abs = s * (1 / max(D_vda, eps)) + t`
 
-## 2. 核心目录
+## 2. 项目图示
+
+### 2.1 知识蒸馏架构图
+
+![VDA Knowledge Distillation Architecture](artifacts/architecture/vda_kd_architecture_paper_simple_clean.png)
+
+### 2.2 端到端流程图
+
+```mermaid
+flowchart LR
+    A["Input RGB (single image)"] --> B["Frozen VDA Encoder/Decoder"]
+    B --> C["Relative depth D_vda"]
+    B --> D["Global feature f"]
+    C --> E["Reciprocal mapping: phi(d)=1/max(d,eps)"]
+    D --> F["Scale MLP Head"]
+    F --> G["Predict (s_hat, t_hat)"]
+    E --> H["Affine fusion: D_abs=s_hat*phi(D_vda)+t_hat"]
+    G --> H
+    H --> I["Absolute depth output"]
+```
+
+## 3. 核心目录
 
 ```text
-Video_Depth/
+VDA-Absolute-Depth-Distillation/
 ├── VDA_Absolute_Distillation/
 │   ├── configs/distill_config.yaml
 │   ├── data_prep/
@@ -34,7 +55,7 @@ Video_Depth/
     └── architecture/vda_kd_architecture_paper_simple_clean.png
 ```
 
-## 3. 环境依赖
+## 4. 环境依赖
 
 推荐在 Linux + CUDA 环境运行，核心依赖：
 
@@ -47,7 +68,7 @@ Video_Depth/
 
 并确保配置中的外部路径可用（VDA 原仓库、Depth Pro 仓库、数据集路径、权重路径）。
 
-## 4. 快速开始
+## 5. 快速开始
 
 进入核心工程目录：
 
@@ -94,7 +115,7 @@ python inference_abs_vda.py \
 - `*.jpg`：可视化图
 - `metadata.json`：每帧 `scale/shift` 与路径信息
 
-## 5. 对比与时序可视化
+## 6. 对比与时序可视化
 
 仓库 `scripts/` 提供：
 
@@ -114,19 +135,19 @@ python scripts/make_temporal_compare_video.py \
   --output-metrics /path/to/out/compare_cam00_metrics.json
 ```
 
-## 6. 关键约束
+## 7. 关键约束
 
 - 默认只使用白名单相机目录；`cam02` 为空目录，应显式跳过。
 - VDA 与 Depth-Pro 分辨率不一致时，需先做空间对齐或在流程中插值对齐。
 - 单图改造后仍需满足 `ensure_multiple_of=14` 的 patch 约束。
 - 训练阶段冻结 VDA 主干与解码器，仅更新 `Scale MLP Head`。
 
-## 7. 文档索引
+## 8. 文档索引
 
 - 项目规则与边界：`VDA_Absolute_Distillation/PROJECT_CHARTER_AND_GUIDELINES.md`
 - 技术状态记录：`VDA_Absolute_Distillation/TECHNICAL_STATUS_2026-03-25.md`
 - 总结报告（中文）：`docs/Agent_VDA_Absolute_Distillation-CN.md`
 
-## 8. 许可证
+## 9. 许可证
 
 本仓库沿用 `LICENSE` 中的许可条款；如使用第三方模型与权重，请同时遵循其原始许可证。
