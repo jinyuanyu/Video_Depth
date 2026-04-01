@@ -17,7 +17,13 @@
 
 ![VDA Knowledge Distillation Architecture](artifacts/architecture/vda_kd_architecture_paper_simple_clean.png)
 
-### 2.2 端到端流程图
+### 2.2 可视化结果深度对比图
+
+![Depth Visual Comparison (2 scenes, 4 columns)](artifacts/qualitative/depth_visual_comparison_2scene_4cols_shared_scale.png)
+
+说明：四列分别为 `RGB`、`Depth-Pro`、`VDA 倒数(0-255后映射到Depth-Pro显示范围)`、`多场景训练后的 VDA Absolute`；两行为两个不同场景样本。
+
+### 2.3 端到端流程图
 
 ```mermaid
 flowchart LR
@@ -32,7 +38,7 @@ flowchart LR
     H --> I["Absolute depth output"]
 ```
 
-### 2.3 实验效果对比（定量快照）
+### 2.4 实验效果对比（定量快照）
 
 ![Experimental Comparison Summary](artifacts/experiments/experimental_comparison_summary.png)
 
@@ -58,7 +64,9 @@ VDA-Absolute-Depth-Distillation/
 │   ├── depth_pro_pipeline.md
 │   └── output_inventory.md
 └── artifacts/
-    └── architecture/vda_kd_architecture_paper_simple_clean.png
+    ├── architecture/vda_kd_architecture_paper_simple_clean.png
+    ├── qualitative/depth_visual_comparison_2scene_4cols_shared_scale.png
+    └── experiments/experimental_comparison_summary.png
 ```
 
 ## 4. 环境依赖
